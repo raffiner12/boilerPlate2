@@ -56,7 +56,9 @@ userSchema.pre('save', function(next){
                 next()
             })
         });
-
+    // 비밀 번호를 바꾸는게 아닌 다른 걸 바꿀 때는 바로 next
+    } else { 
+        next()
     }
 })
 
