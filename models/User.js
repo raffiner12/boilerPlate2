@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+
 const userSchema = mongoose.Schema({
     // 유저와 관련된 것 작성
     name: {
@@ -61,6 +62,25 @@ userSchema.pre('save', function(next){
         next()
     }
 })
+
+//-------------------------------------------------------------------------------
+
+// 로그인 기능 comparePassword 메소드 만들기
+
+userSchema.methods.comparePassword = function(plainPassword, cb) {
+ 
+    // plainPassword 1234567  <-  같은지 체크  ->  암호화된 비밀번호 $2g45@F#$G43g34g3~~
+    // 복호화는 안되기 때문에 순수비번을 암호화해서 같은지 체크해야함.
+                // (순수 비밀번호, 암호화된 비밀번호, 콜백함수(에러, true))
+    bcrypt.compare(plainPassword, this.password, function(err, isMatch) { // this가 70번 줄의 userSchema를 가르킴
+        if(err) return cb(err),
+            // 콜백 (에러는 없고, true)
+            cb(null, isMatch)
+    })
+}
+
+//-------------------------------------------------------------------------------
+
 
 // 스키마를 모델로 감싸줌
 const User = mongoose.model('User', userSchema) // model('모델이름', 스키마)

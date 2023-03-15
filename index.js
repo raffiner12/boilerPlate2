@@ -25,7 +25,12 @@ mongoose.connect(config.mongoURI,{
 // get 메소드 
 app.get('/', (req, res) => { res.send('Hello World!~~ 안녕하세요')})
 
+
+//-------------------------------------------------------------------------------
+
 // 회원가입을 위한 Register Route 만들기 
+
+
 // post 메소드 이용
 //    ('라우트 end포인트', (콜백 함수))
 app.post('/register', async (req, res) => {
@@ -56,6 +61,44 @@ app.post('/register', async (req, res) => {
     res.json({ success: false, err})
   })
 })
+
+//-------------------------------------------------------------------------------
+
+// 로그인을 위한 login route 만들기
+
+// post메소드를 사용함.
+app.post('/login', (req, res) => {
+
+// 1. 요청된 이메일을 데이터베이스에서 있는지 찾는다 (이메일로 로그인)
+  // User모델을 가져와 findOne이란 몽고DB 메소드 이용
+  User.findOne({ email: req.body.email }, (err, user) => {
+    // 이 email을 가진 유저가 한 명도 없다면
+    if(!user) {
+      return res.json({
+        loginSuccess : false,
+        message: "제공된 이메일에 해당하는 유저가 없습니다."
+      })
+    }
+
+// 2. 요청된 이메일이 데이터 베이스에 있다면 비밀번호가 맞는 비밀번호인지 확인
+                      //(요청할 때 주는 비번,(에러, 비번 비교해서 맞다)
+    user.comparePassword(req.body.password, (err, isMatch) => { // 메소드를 User 모델에서 만듦. (User.js)
+      if(!isMatch)
+      return res.json({ loginSuccess: false, message: "비밀번호가 틀렸습니다."})
+
+// 3. 비밀 번호까지 맞다면 토큰을 생성하기.
+      user.generateToken((err, user) => { // 메소드를 User 모델에서 만듦. (User.js)
+
+      })
+
+    })
+
+  })
+})
+
+
+
+//-------------------------------------------------------------------------------
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)
