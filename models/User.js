@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const userSchema = mongoose.Schema({
     // 유저와 관련된 것 작성
     name: {
@@ -29,6 +30,33 @@ const userSchema = mongoose.Schema({
     },
     tokenExp: {
         type: Number
+    }
+})
+
+// 몽구스에서 가져온 메소드 pre()
+// 유저 모델에 유저 정보를 저장하기 전에 함수를 줘서 뭔가 한다는 것. 다 끝나면 index.js save로 돌아감.
+// 할 걸 다하면 next() 로 보내버림.
+userSchema.pre('save', function(next){
+    
+    var user = this; // this가 유저스키마 내용을 가르킴.
+
+    // 비밀번호를 바꿀 때만 다시 비밀번호를 암호화 하도록 조건을 걸어줌
+    if(user.isModified('password')) {
+
+        // 비밀 번호를 암호화 시킨다.
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            if(err) return next(err)
+            // salt를 제대로 생성했다면
+                // pw를 hash로 교체 (순수한 비밀번호, salt)
+            bcrypt.hash(user.password, salt, function(err, hash){
+                if(err) return next(err)
+                // 암호화된 비밀번호를 만드는데 성공했다면
+                user.password = hash
+                // 완성이 됐으면 돌아가야지 (index.js로)
+                next()
+            })
+        });
+
     }
 })
 
