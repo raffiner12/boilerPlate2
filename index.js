@@ -2,6 +2,9 @@ const express = require('express') // express 모듈을 가져옴
 const app = express()
 const port = 5000
 const bodyParser = require('body-parser');
+
+const config = require('./config/key');
+
 const { User } = require("./models/User");
 
   
@@ -13,7 +16,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://noncelabLena:1234*@cluster0.ry13cak.mongodb.net/?retryWrites=true&w=majority ',{
+mongoose.connect(config.mongoURI,{
     useNewUrlParser: true, useUnifiedTopology:true // 에러 안뜨게 써주는 것. 몽구스 6버전 이상은 usenewparser,topology, createindex, findandmodify 삭제
 }).then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err))
