@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-
+const jwt = require('jsonwebtoken');
 const userSchema = mongoose.Schema({
     // 유저와 관련된 것 작성
     name: {
@@ -73,12 +73,33 @@ userSchema.methods.comparePassword = function(plainPassword, cb) {
     // 복호화는 안되기 때문에 순수비번을 암호화해서 같은지 체크해야함.
                 // (순수 비밀번호, 암호화된 비밀번호, 콜백함수(에러, true))
     bcrypt.compare(plainPassword, this.password, function(err, isMatch) { // this가 70번 줄의 userSchema를 가르킴
-        if(err) return cb(err),
+        if(err) return cb(err);
             // 콜백 (에러는 없고, true)
-            cb(null, isMatch)
+            cb(null, isMatch) 
     })
 }
 
+
+// 토큰 발행
+
+userSchema.methods.generateToken = function(cb) {
+
+    var user = this;
+    
+    // jsonwebtoken을 이용해서 token을 생성하기
+    // user._id + secretToken = token
+    // -> 후에 token 해석할 때 secretToken 넣으면 -> user._id 가 나옴  =>  token을 가지고  user._id가 누군지 알 수 있는 것.
+    var token = jwt.sign(user._id.toHexString(), 'secretToken')
+
+    user.token = token
+    user.save(function(err, user) {
+        // 만약 에러가 있다면 콜백으로 에러를 전달
+        if(err) return cb(err)
+        // save가 잘 됐다면 에러는 없고, user 정보만 전달
+        cb(null, user)
+    })
+    
+}
 //-------------------------------------------------------------------------------
 
 
