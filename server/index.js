@@ -26,6 +26,11 @@ mongoose.connect(config.mongoURI,{
 // get 메소드 
 app.get('/', (req, res) => { res.send('Hello World!~~ 안녕하세요')})
 
+// 랜딩페이지의 request를 받는 라우트를 만듦
+app.get('/api/hello', (req,res) => {
+  res.send("안녕하세요 ~") // 프론트에 메시지 전달(응답)
+})
+
 
 //-------------------------------------------------------------------------------
 
@@ -34,7 +39,7 @@ app.get('/', (req, res) => { res.send('Hello World!~~ 안녕하세요')})
 
 // post 메소드 이용
 //    ('라우트 end포인트', (콜백 함수))
-app.post('/api/users/register', (req, res) => {
+app.post('/api/users/register', async (req, res) => {
   
   // 회원 가입할 때 필요한 정보들을 client에서 가져오면
   // 그것들을 데이터 베이스에 넣어준다. -> 모델 폴더의 User.js 가져와야함.
@@ -54,7 +59,7 @@ app.post('/api/users/register', (req, res) => {
       //     success: true
       //   })
       // })
-  user.save().then(()=>{
+  const result = await user.save().then(() => {
     res.status(200).json({
       success: true
     })
