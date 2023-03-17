@@ -100,6 +100,26 @@ userSchema.methods.generateToken = function(cb) {
     })
     
 }
+
+//-------------------------------------------------------------------------------
+
+// Auth
+
+userSchema.statics.findByToken = function( token, cb) {
+    var user = this;
+
+//  토큰을 decode한다.    
+    jwt.verify(token, 'secretToken', function(err, decoded) { // decoded된 것은 userId
+
+        // 유저 아이디를 이용해서 유저를 찾은 다음에 클라이언트에서 가져온 token과 DB에 보관된 토큰이 일치하는지 확인   
+        user.findOne({"_id": decoded, "token": token }, function(err, user){
+            // 에러가 있다면 콜백으로 에러 전달
+            if(err) return cb(err);
+            // 만약 에러가 없다면 user 정보를 전달
+            cb(null, user)
+        })
+    })
+}
 //-------------------------------------------------------------------------------
 
 

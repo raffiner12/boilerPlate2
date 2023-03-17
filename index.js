@@ -4,7 +4,7 @@ const port = 5000
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser'); 
 const config = require('./config/key');
-
+const { auth } = require('./middleware/auth')
 const { User } = require("./models/User");
 
   
@@ -34,7 +34,7 @@ app.get('/', (req, res) => { res.send('Hello World!~~ 안녕하세요')})
 
 // post 메소드 이용
 //    ('라우트 end포인트', (콜백 함수))
-app.post('/register', (req, res) => {
+app.post('/api/users/register', (req, res) => {
   
   // 회원 가입할 때 필요한 정보들을 client에서 가져오면
   // 그것들을 데이터 베이스에 넣어준다. -> 모델 폴더의 User.js 가져와야함.
@@ -114,6 +114,43 @@ app.post('/api/users/login', (req, res) => {
   })
 })
 
+//-------------------------------------------------------------------------------
+
+// Auth (신원 인증 기능)
+
+app.get('/api/users/auth', auth, (req, res) => {  // middleware : 엔드포인트에 req 받은 다음 콜백 함수 하기 전 중간 단계 
+
+//  아래 코드로 가려면 미들웨어까지 통과해야함.  
+//  여기까지 미들웨어를 통과해 왔다는 얘기는 Authentication이 true라는 말
+  res.status(200).json({
+    _id: req.user._id,
+    isAdmin: req.user.role === 0 ? false :  true,  // 0이면 false(일반 유저), 아니면  true(관리자)
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    role: req.user.role,
+    image: req.user.image
+    // 이렇게 정보를 주면 어떤 페이지에 쓰는지 유저정보를 이용할 수 있어서 편해짐.
+  }) 
+})
+
+//-------------------------------------------------------------------------------
+
+// 로그아웃
+
+app.get('/api/users/logout', auth, (req, res) => { // 로그인 된 상태니까 auth 넣어줌.
+  User.findOneAndUpdate({_id: req.user._id},  // 유저 찾을 때는 Id로 찾음
+  { token: "" } // 토큰 지워줌
+  , (err, user) => {
+    // 에러가 났다면
+    if(err) return res.json({ success: false, err});
+    // 성공했다면
+    return res.status(200).send({
+      success: true
+    })
+  })
+})
 
 
 //-------------------------------------------------------------------------------
