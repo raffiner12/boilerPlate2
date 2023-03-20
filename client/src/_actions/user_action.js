@@ -28,7 +28,7 @@ export function registerUser(dataToSubmit) {
     }
 }
 
-export function auth(dataToSubmit) {
+export function auth() {
     // 서버에 보낼 때는 Axios 사용
     // get 메소드니까 body 부분은 필요X
     const request = axios.get('/api/users/auth')

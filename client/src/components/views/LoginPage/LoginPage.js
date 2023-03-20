@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import Axios from 'axios'
+// import Axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../../../_actions/user_action';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [Email, setEmail] = useState("") // Email이 처음엔 빈 칸
   const [Password,setPassword] = useState("")
@@ -33,7 +34,8 @@ function LoginPage(props) {
     dispatch(loginUser(body))
       .then(response => {
         if(response.payload.loginSuccess) {
-          props.history.push('/')
+          //props.history.push('/')
+          navigate("/")
         } else {
           alert('Error')
         }
@@ -62,4 +64,4 @@ function LoginPage(props) {
   )
 }
 
-export default witRouter(LoginPage)
+export default LoginPage

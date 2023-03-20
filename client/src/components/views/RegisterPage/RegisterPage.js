@@ -2,28 +2,28 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { registerUser } from '../../../_actions/user_action';
 import Axios from 'axios';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterPage(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [Email, setEmail] = useState("") // Email이 처음엔 빈 칸
-  const [Password,setPassword] = useState("")
   const [Name, setName] = useState("")
+  const [Password,setPassword] = useState("")
   const [ConfirmPassword, setConfirmPassword] = useState("")
 
-
   const onEmailHandler = (event) => {
-    setEmail(event.currentTarget.value) // setEmail을 이용해 state를 바꿔줄 수 있다
-  }
+    setEmail(event.currentTarget.value); // setEmail을 이용해 state를 바꿔줄 수 있다
+  };
 
   const onNameHandler = (event) => {
-    setName(event.currentTarget.value)
-  }
+    setName(event.currentTarget.value);
+  };
 
   const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value)
-  }
+    setPassword(event.currentTarget.value);
+  };
 
   const onConfirmPasswordHandler = (event) => {
     setConfirmPassword(event.currentTarget.value)
@@ -41,18 +41,21 @@ function RegisterPage(props) {
       email: Email,
       password: Password,
       name: Name
-    }
+    };
 
     // dispatch를 이용해 ACTION을 취함. (ACTION이름 : registerUser)
     dispatch(registerUser(body))
       .then(response => {
         if(response.payload.success) {
-          props.history.push("/login")
+          //props.history.push("/login")
+          alert("회원가입이 완료되었습니다.");
+          navigate("/login");
         } else {
-          alert("Failed to sign up")
+          alert("회원가입 중 오류가 발생했습니다.")
         }
-      }) 
-  }
+      }); 
+  };
+
   return (
     <div style = {{ display: 'flex', justifyContent: 'center', alignItems: 'center',
                     width: '100%', height: '100vh' 
@@ -64,20 +67,20 @@ function RegisterPage(props) {
         <input type="email" value={Email} onChange={onEmailHandler} />
 
         <label>Name</label>
-        <input type="email" value={Name} onChange={onNameHandler} />
+        <input type="text" value={Name} onChange={onNameHandler} />
 
         <label>Email</label>
-        <input type="email" value={Email} onChange={onEmailHandler} />
+        <input type="password" value={Password} onChange={onPasswordHandler} />
 
         <label>Confirm Password</label>
         <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler} />
         <br/>
-        <button>
+        <button type="submit">
           회원 가입
         </button>
       </form>
     </div>
-  )
+  );
 }
 
-export default RegisterPage
+export default RegisterPage;

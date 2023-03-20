@@ -1,19 +1,24 @@
 import React, { useEffect } from 'react'
 import axios from 'axios';
-import { withRouter } from 'react-router-dom';
+
+// This is a React Router v6 app
+import { useNavigate } from 'react-router-dom';
 
 function LandingPage(props) {
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     axios.get('/api/hello') // endPoint를 서버로 우리가 보냄 -> server/index.js
-    .then(response => console.log(response)) //콘솔로 받은 메시지 출력
+      .then(response => console.log(response)) //콘솔로 받은 메시지 출력
   }, [])
   
-  onClickHandler = () => {
+  const onClickHandler = () => {
     axios.get('/api/users/logout')
       .then(response => {
         if(response.data.success){
-          props.history.push("/login")
+          //props.history.push("/login")
+          navigate('/login')
         } else {
           alert('로그아웃 하는데 실패했습니다.')
         }
@@ -33,4 +38,4 @@ function LandingPage(props) {
   )
 }
 
-export default withRouter(LandingPage)
+export default LandingPage;
