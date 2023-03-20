@@ -14,7 +14,7 @@ export default function (state = {}, action) { // 현재 state은 비어있는 �
         case AUTH_USER:
             return { ...state, userData: action.payload }
             break;
-        default:
+        default: 
             return state;
     }
 }

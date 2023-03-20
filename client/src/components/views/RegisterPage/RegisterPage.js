@@ -69,7 +69,7 @@ function RegisterPage(props) {
         <label>Name</label>
         <input type="text" value={Name} onChange={onNameHandler} />
 
-        <label>Email</label>
+        <label>Password</label>
         <input type="password" value={Password} onChange={onPasswordHandler} />
 
         <label>Confirm Password</label>
