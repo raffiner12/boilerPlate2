@@ -7,7 +7,7 @@
     "start": "node server/index.js",
     "backend": "nodemon server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev" : "concurrently \"npm run backend\" \"npm run start --prefix client\"" 
+    "dev": "concurrently \"npm run backend\" \"npm run start --prefix client\""
   },
   "author": "lena",
   "license": "ISC",
@@ -17,8 +17,9 @@
     "concurrently": "^7.6.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.1",
+    "mongoose": "^5.8.9",
     "react-redux": "^8.0.5",
     "redux": "^4.2.1",
     "redux-promise": "^0.6.0",

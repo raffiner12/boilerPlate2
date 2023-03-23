@@ -73,7 +73,7 @@ userSchema.methods.comparePassword = function(plainPassword, cb) {
     // 복호화는 안되기 때문에 순수비번을 암호화해서 같은지 체크해야함.
                 // (순수 비밀번호, 암호화된 비밀번호, 콜백함수(에러, true))
     bcrypt.compare(plainPassword, this.password, function(err, isMatch) { // this가 70번 줄의 userSchema를 가르킴
-        if(err) return cb(err);
+        if(err) return cb(err)
             // 콜백 (에러는 없고, true)
             cb(null, isMatch) 
     })
@@ -114,7 +114,7 @@ userSchema.statics.findByToken = function( token, cb) {
         // 유저 아이디를 이용해서 유저를 찾은 다음에 클라이언트에서 가져온 token과 DB에 보관된 토큰이 일치하는지 확인   
         user.findOne({"_id": decoded, "token": token }, function(err, user){
             // 에러가 있다면 콜백으로 에러 전달
-            if(err) return cb(err);
+            if(err) return cb(err)
             // 만약 에러가 없다면 user 정보를 전달
             cb(null, user)
         })
