@@ -11,21 +11,33 @@ import {
 import LandingPage from './components/views/LandingPage/LandingPage'
 import LoginPage from './components/views/LoginPage/LoginPage'
 import RegisterPage from './components/views/RegisterPage/RegisterPage'
-import Auth from './hoc/auth'
 
-export default function App() {
-  const NewLandingPage = Auth(LandingPage, null);
-  const NewLoginPage = Auth(LoginPage, false);
-  const NewRegisterPage = Auth(RegisterPage, false);
+// export default function App() {
+//   const NewLandingPage = Auth(LandingPage, null);
+//   const NewLoginPage = Auth(LoginPage, false);
+//   const NewRegisterPage = Auth(RegisterPage, false);
 
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route exact path="/" element = {< NewLandingPage />} />
+//         <Route exact path="/login" element = {< NewLoginPage /> }/>
+//         <Route exact path="/register" element = {< NewRegisterPage />} />
+//       </Routes>
+//     </Router>
+//   );
+// }
+
+function App(){
   return (
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element = {< NewLandingPage />} />
-        <Route exact path="/login" element = {< NewLoginPage /> }/>
-        <Route exact path="/register" element = {< NewRegisterPage />} />
+        <Route exact path = '/' element={<LandingPage />} />
+        <Route exact path = '/login' element={<LoginPage />} />
+        <Route exact path = '/register' element={<RegisterPage />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
+export default App;

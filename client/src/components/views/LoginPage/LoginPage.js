@@ -3,11 +3,11 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../../../_actions/user_action';
 import { useNavigate } from 'react-router-dom';
+import Auth from '../../../hoc/auth'
 
 function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   // value부분에 state을 넣어줘야 한다. -> useState 사용
   const [Email, setEmail] = useState("") // Email이 처음엔 빈 칸
@@ -67,4 +67,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default Auth(LoginPage, false);
