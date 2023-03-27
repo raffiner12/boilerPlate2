@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 const mongoose = require('mongoose')
 mongoose.connect(config.mongoURI,{
-  useNewUrlParser: true, useUnifiedTopology:true, useFindAndModify: false // 에러 안뜨게 써주는 것. 몽구스 6버전 이상은 usenewparser,topology, createindex, findandmodify 삭제
+  useNewUrlParser: true, useUnifiedTopology:true//, useFindAndModify: false // 에러 안뜨게 써주는 것. 몽구스 6버전 이상은 usenewparser,topology, createindex, findandmodify 삭제
 }).then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err))
 
@@ -146,15 +146,22 @@ app.get('/api/users/auth', auth, (req, res) => {  // middleware : 엔드포인�
 
 app.get('/api/users/logout', auth, (req, res) => { // 로그인 된 상태니까 auth 넣어줌.
   User.findOneAndUpdate({_id: req.user._id},  // 유저 찾을 때는 Id로 찾음
-  { token: "" } // 토큰 지워줌
-  , (err, user) => {
-    // 에러가 났다면
-    if(err) return res.json({ success: false, err});
-    // 성공했다면
-    return res.status(200).send({
-      success: true
-    })
+  { token: "" } ).exec() // 토큰 지워줌
+    .then((user) => {
+      return res.status(200).send({
+        success: true
+      })
+    }) .catch((err) => {
+      return res.json({ success: false, err});
   })
+  // , (err, user) => {
+  //   // 에러가 났다면
+  //   if(err) return res.json({ success: false, err});
+  //   // 성공했다면
+  //   return res.status(200).send({
+  //     success: true
+  //   })
+  // })
 })
 
 
